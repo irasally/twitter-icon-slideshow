@@ -21,13 +21,14 @@ function IconSlideshowViewModel(){
       var data = json[i];
       self.screenNames.push(new Icon(data['screenName']));
     }
+    //self.startMarquee();
     self.startSlideShow();
   };
   
   self.startSlideShow = function(){
     $('.bxslider').bxSlider({
       mode: 'fade',
-      speed: 800,
+      speed: 900,
       auto: true,
       autoControls: true,
       ticker: true,
@@ -35,10 +36,19 @@ function IconSlideshowViewModel(){
       onSlideBefore: function($slideElement, oldIndex, newIndex){ 
         var screenName = $slideElement.children('img').attr('title');
         var bgUrl = 'http://gadgtwit.appspot.com/twbg/' + screenName; 
-        $('body').css('background-image', 'url(' + bgUrl + ')');
-        $('#screenName').text("@" + screenName);
+        $('body').fadeOut(700, function(){
+          $('body').css('background-image', 'url(' + bgUrl + ')').fadeIn(700);
+          $('#screenName').text('@' + screenName);
+          //self.changeScreenName(screenName);
+        });
       }
     });
+  };
+  self.startMarquee = function(){
+    self.mqobj = $('#marquee').marquee('screenName opacity-bg');
+  };
+  self.changeScreenName = function(screenName){
+    self.mqobj.children('div').text('@' + screenName);
   };
 }
 ko.applyBindings(new IconSlideshowViewModel());
